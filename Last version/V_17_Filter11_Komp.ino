@@ -4,17 +4,16 @@
     Bluetooth Modul ist H-06
     Barometer Modul ist MS5611
     Mini PRO 3.3V 8 MHz oder Leonardo
-    oder !!!belibiges!!! Arduino
+    oder !!!beliebiges!!! Arduino
 *****************************************************
 
 Notiz:  
   * Filter ist ein Mischung aus Exp-Filter und 
     Mittelwert aus "mittel_n"-Werte. 
-  * Hier ist die erweiterung zum Akkuladezustand 
+  * Hier ist die Erweiterung zum Akku-Ladezustand 
     auslesen.
 
-
-****************************************************
+*****************************************************
   Auf der Misst von Ivaylo gewachsen.
   2018-07-19
 *****************************************************
@@ -29,13 +28,13 @@ MS5611 bpm;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////   Variablen die Mann aendern kann!   /////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float min_steigen = 0.20;               //Minimale Steigen (Standart Wert ist 0.4m/s).
-float max_sinken = -3.50;               //Maximales Sinken (Standart Wert ist - 1.1m/s).
+float min_steigen = 0.20;               //Minimale Steigen (Standard Wert ist 0.4m/s).
+float max_sinken = -3.50;               //Maximales Sinken (Standard Wert ist - 1.1m/s).
 
-long leseZeit = 125;                    //Interval zum lesen vom Baro audio Vario, Standart(min) ist 150.
-long leseZeitBT = 100;                  //Interval zum lesen vom Baro fuer BT, Standart(min) ist 100.
+long leseZeit = 125;                    //Interval zum lesen vom Baro audio Vario, Standard(min) ist 150.
+long leseZeitBT = 100;                  //Interval zum lesen vom Baro fuer BT, Standard(min) ist 100.
 
-long konst_frqz = 150;                  //Audio Frequez beim konstante Frequenz Einstellung.
+long konst_frqz = 150;                  //Audio Frequenz beim konstante Frequenz Einstellung.
 long max_frqz = 2000;                   //Maximale Audio Frequenz beim variable Frequenz Einstellung.
 
 short bt_pin = 2;                       //Bluetooth Pin definieren. Fuer Leonardo 14. Fuer die Anderen 2.
@@ -74,8 +73,8 @@ unsigned long  dZeit, ZeitE, ZeitS, ZeitPip;
 void setup() {
   leseZeit = leseZeit - 24;
 
-  Serial.begin(9600);                  //fuer MiniPro
-  //Serial1.begin(9600);                 //fuer BT - Leonardo.
+  Serial.begin(9600);
+  //Serial1.begin(9600);
 
   //pinMode(bt_pin, INPUT);                 // Definiert den Pin für der BT Schalter.
   //PinBT = digitalRead(bt_pin);            // Definiere SChalter Zustand fuer BT.
@@ -155,7 +154,7 @@ void loop()
     {
       SteigenBerechnen();
     }
-    PipserX();
+    PiepserX();
     //ZeitE = micros();
   }
   else
@@ -262,7 +261,7 @@ void SteigenBerechnen()
 
 
 
-// Akku Voltage im % #############################################################################################
+// Akku Spannung im % ############################################################################################
 // ###############################################################################################################
 void AkkuVolt()
 {
@@ -276,9 +275,9 @@ void AkkuVolt()
 
 
 
-// Pipser ########################################################################################################
+// Piepser #######################################################################################################
 // ###############################################################################################################
-void PipserX()
+void PiepserX()
 {
   //Vario = 1.00; // Ton Test!
 
@@ -330,7 +329,7 @@ void PipserX()
 
 // Bloetooth #####################################################################################################
 // ###############################################################################################################
-/*  Verschiedene Komuniktionsprotokole möglich.  */
+/*  Verschiedene Kommunikationsprotokolle moeglich.  */
 
 void Bloetooth()
 {
@@ -344,13 +343,13 @@ void Bloetooth()
   Druck = bpm.readPressure();
 
   Serial.print("PRS ");               //Ausgabe an der BT fuer MiniPro.
-  Serial.println( Druck, HEX);        //BT-Serial schnitstelle ungefiltert.  Fuer MiniPro.
+  Serial.println( Druck, HEX);        //BT-Serial Schnittstelle ungefiltert.  Fuer MiniPro.
 
   //Serial1.print("PRS ");               //Ausgabe an der BT fuer Leonardo.
-  //Serial1.println( Druck, HEX);        //BT-Serial schnitstelle ungefiltert.  Fuer Leonardo.
+  //Serial1.println( Druck, HEX);        //BT-Serial Schnittstelle ungefiltert.  Fuer Leonardo.
 
-  // Wenn XCSoar vervender wird die Zeile drunter mitt "//..." auskomentieren.
-  //delay(leseZeitBT - 22); //Wenn XCTrack benutzt wird Zeille aktiv lassen.
+  // Wenn XCSoar verwendet wird die Zeile drunter mit "//..." auskommentieren.
+  //delay(leseZeitBT - 22); //Wenn XCTrack benutzt wird Zeile aktiv lassen.
 
   // Ende "BlueFlyVario" sentence =========================================================================== */
 
@@ -394,7 +393,7 @@ void Bloetooth()
 
     delay(leseZeitBT - 73);
 
-  // Ende "LXNAV - LXWP0" sentence ========================================================================== */
+    // Ende "LXNAV - LXWP0" sentence ========================================================================== */
 
   // =>>
 
@@ -490,9 +489,9 @@ void Bloetooth()
   // ===========================================================================================================
   /*/ On-Off | Hier zwischen // ein * setzen dann ist es deaktiviert.
 
-    // Zum Testen ueber Serial-Port !!!-> nicht vergesen VarioR aus zu kommentiren.
+    // Zum Testen ueber Serial-Port !!!-> nicht vergessen VarioR aus zu kommentieren.
     //Temp.[C°];Druck[Pa];Hoehe[m];dZeit[ms];VarioR[m/s];Vario[m/s];BT Taster
-    //  Zum Asugabe aktiwieren * zwischen // löschen.
+    //  Zum Ausgabe aktivieren * zwischen // löschen.
 
     SteigenBerechnen();
 
@@ -523,4 +522,3 @@ void Bloetooth()
 }
 // ###############################################################################################################
 // ENDE ##########################################################################################################
-
