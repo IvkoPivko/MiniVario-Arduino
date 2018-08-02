@@ -110,7 +110,7 @@ void setup() {
       delay(500);
       //Serial.print("AT+RESET");
       delay(500);//*/
-    // PIN ist 1234 oder 0000 <= #############################################################################
+    // PIN ist 1234 oder 0000 <= #################################################################################
   }
   else
   {
@@ -333,8 +333,8 @@ void PiepserX()
 
 void Bloetooth()
 {
-  // Start "Blue Fly Vario" sentence ===========================================================================
-  // ===========================================================================================================
+  // Start "Blue Fly Vario" sentence =============================================================================
+  // =============================================================================================================
   /* Ausgabe im BlueFlyVario Format.     The standard BlueFlyVario outp ut mode. This sends raw
     pressure measurements in the form "PRS XXXXX\n": XXXXX is the raw (unfiltered) pressure
     measurement in hexadecimal pascals. */
@@ -355,8 +355,8 @@ void Bloetooth()
 
   // =>>
 
-  // Start "LXNAV - LXWP0" sentence ============================================================================
-  // ===========================================================================================================
+  // Start "LXNAV - LXWP0" sentence ==============================================================================
+  // =============================================================================================================
   /* Send LXWP0 output mode for use with a range of apps:
       "$LXWP0,loger_stored (Y/N), IAS (kph), baroaltitude (m), vario (m/s),,,,,,heading of plane,
       windcourse (deg),windspeed (kph)*checksum \r\n" */
@@ -397,8 +397,8 @@ void Bloetooth()
 
   // =>>
 
-  // Start "LK8EX1" sentence ===================================================================================
-  // ===========================================================================================================
+  // Start "LK8EX1" sentence =====================================================================================
+  // =============================================================================================================
   // Send $LK8EX1,pressure,altitude,vario,temperature,battery,*checksum
   // On-Off | Hier zwischen // ein * setzen dann ist es deaktiviert.  
     Temp = bpm.readTemperature(true);
@@ -440,8 +440,8 @@ void Bloetooth()
 
   // =>>
 
-  // Start "Custom BFV" sentence ===============================================================================
-  // ===========================================================================================================
+  // Start "Custom BFV" sentence =================================================================================
+  // =============================================================================================================
   /* Custom BFV sentence: This sends a NMEA like sentence in the
     following format: "$BFV,pressure(Pa),vario(cm/s), temp(deg C),
     battery(%),pitotDiffPressure(pa)*checksum\r\n". Pressure (the filtered pressure as an
@@ -485,8 +485,8 @@ void Bloetooth()
 
 
 
-  // Start Normale Daten Ausgabe ===============================================================================
-  // ===========================================================================================================
+  // Start Normale Daten Ausgabe =================================================================================
+  // =============================================================================================================
   /*/ On-Off | Hier zwischen // ein * setzen dann ist es deaktiviert.
 
     // Zum Testen ueber Serial-Port !!!-> nicht vergessen VarioR aus zu kommentieren.
