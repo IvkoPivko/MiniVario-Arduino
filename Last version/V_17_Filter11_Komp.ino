@@ -74,8 +74,8 @@ unsigned long  dZeit, ZeitE, ZeitS, ZeitPip;
 void setup() {
   leseZeit = leseZeit - 24;
 
-  Serial.begin(9600);
-  //Serial1.begin(9600);
+  Serial.begin(9600);                  //fuer MiniPro
+  //Serial1.begin(9600);                 //fuer BT - Leonardo.
 
   //pinMode(bt_pin, INPUT);                 // Definiert den Pin für der BT Schalter.
   //PinBT = digitalRead(bt_pin);            // Definiere SChalter Zustand fuer BT.
@@ -97,7 +97,7 @@ void setup() {
   }
 
   //BT umbenennen START
-  if (PinBT == 0)
+  if (PinBT == 1)
   {
     digitalWrite(7, HIGH);               // BT Versorgung einschalten.
     digitalWrite(8, HIGH);               // BT Versorgung einschalten.
@@ -394,7 +394,7 @@ void Bloetooth()
 
     delay(leseZeitBT - 73);
 
-    // Ende "LXNAV - LXWP0" sentence ========================================================================== */
+  // Ende "LXNAV - LXWP0" sentence ========================================================================== */
 
   // =>>
 
@@ -408,8 +408,8 @@ void Bloetooth()
     AkkuVolt();
     
     String s = "LK8EX1,";
-    s = String(s + String(Druck,0) + ",99999,9999," + String(Temp,1) + "," + String(Batt,0) + ",");
-    //s = String(s + String(Druck,DEC) + ",99999,9999," + String(Temp,1) + "," + String(Batt,1) + ",");
+    //s = String(s + String(Druck,0) + ",99999,9999," + String(Temp,1) + "," + String(Batt,0) + ",");
+    s = String(s + String(Druck,DEC) + ",99999,9999," + String(Temp,1) + "," + String(Batt,1) + ",");
 
     // Checksum berechnen und als int ausgeben
     // wird als HEX benötigt im NMEA Datensatz
