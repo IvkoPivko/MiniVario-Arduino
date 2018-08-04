@@ -15,7 +15,7 @@ Notiz:
 
 *****************************************************
   Auf der Misst von Ivaylo gewachsen.
-  2018-07-19
+  2018-08-04
 *****************************************************
 ****************************************************/
 
@@ -76,9 +76,9 @@ void setup() {
   Serial.begin(9600);
   //Serial1.begin(9600);
 
-  //pinMode(bt_pin, INPUT);                 // Definiert den Pin für der BT Schalter.
-  //PinBT = digitalRead(bt_pin);            // Definiere SChalter Zustand fuer BT.
-  PinBT = 0;                              // Wenn keine BT-Modul eingebaut ist - 0.
+  pinMode(bt_pin, INPUT);                 // Definiert den Pin für der BT Schalter.
+  PinBT = digitalRead(bt_pin);            // Definiere SChalter Zustand fuer BT.
+  //PinBT = 0;                              // Wenn keine BT-Modul eingebaut ist - 0.
 
   pinMode(7, OUTPUT);                     // Pin zum BT Versorgung.
   pinMode(8, OUTPUT);                     // Pin zum BT Versorgung.
@@ -101,7 +101,7 @@ void setup() {
     digitalWrite(7, HIGH);               // BT Versorgung einschalten.
     digitalWrite(8, HIGH);               // BT Versorgung einschalten.
     delay(1000);
-    //Serial.begin(9600);                  //fuer MiniPro
+    Serial.begin(9600);                  //fuer MiniPro
     //Serial1.begin(9600);                 //fuer BT - Leonardo.
     /*/ On-Off | Hier zwischen // die * entfernen um die BT Name zu aendern.
       Serial.print("AT");
@@ -270,7 +270,7 @@ void AkkuVolt()
   //Batt = Vbat*1.00;
   //Batt =   Vbat*(3.3 / 1023.0)/0.769;
 }
-// ###############################################################################################################
+// #############################################################################################################*/ 
 // ENDE ##########################################################################################################
 
 
@@ -347,6 +347,8 @@ void Bloetooth()
 
   //Serial1.print("PRS ");               //Ausgabe an der BT fuer Leonardo.
   //Serial1.println( Druck, HEX);        //BT-Serial Schnittstelle ungefiltert.  Fuer Leonardo.
+
+  delay(leseZeitBT - 73);
 
   // Wenn XCSoar verwendet wird die Zeile drunter mit "//..." auskommentieren.
   //delay(leseZeitBT - 22); //Wenn XCTrack benutzt wird Zeile aktiv lassen.
@@ -436,7 +438,7 @@ void Bloetooth()
         //Serial.println(XOR,HEX); // 
     
     delay(leseZeitBT - 30);
-    // Ende "LK8EX1" sentence ================================================================================= */
+  // Ende "LK8EX1" sentence ================================================================================= */
 
   // =>>
 
