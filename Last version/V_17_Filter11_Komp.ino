@@ -151,9 +151,30 @@ void loop()
     if (float(dZeit) / 1000 >= float(leseZeit) )
     {
       SteigenBerechnen();
+
+        //BT Taster;dZeit[ms];Druck[Pa];Hoehe[m];VarioR[m/s];Vario[m/s]
+        //  Zum aktivieren der Ausgabe * zwischen // loeschen.
+      
+        Serial.print(PinBT);
+        Serial.print("; ");
+      
+        Serial.print(float(dZeit) / 1000, 2);
+        Serial.print("; ");
+      
+        Serial.print(Druck);
+        Serial.print("; ");
+      
+        Serial.print(Hoehe, 2);
+        Serial.print("; ");
+      
+        Serial.print(VarioR, 2);
+        Serial.print("; ");
+      
+        Serial.print(Vario, 2);//
+        Serial.println(); // */
+
     }
     PiepserX();
-    //ZeitE = micros();
   }
   else
   {
@@ -230,28 +251,6 @@ void SteigenBerechnen()
   for (i; i > 1; i--) {
     kal[i] = kal[i - 1];
   }
-
-
-  //BT Taster;dZeit[ms];Druck[Pa];Hoehe[m];VarioR[m/s];Vario[m/s]
-  //  Zum aktivieren der Ausgabe * zwischen // loeschen.
-
-  Serial.print(PinBT);
-  Serial.print("; ");
-
-  Serial.print(float(dZeit) / 1000, 2);
-  Serial.print("; ");
-
-  Serial.print(Druck);
-  Serial.print("; ");
-
-  Serial.print(Hoehe, 2);
-  Serial.print("; ");
-
-  Serial.print(VarioR, 2);
-  Serial.print("; ");
-
-  Serial.print(Vario, 2);//
-  Serial.println(); // */
 
 }
 // ###############################################################################################################
