@@ -15,7 +15,7 @@ Notiz:
 
 *****************************************************
   Auf der Misst von Ivaylo gewachsen.
-  2018-08-04
+  2018-08-05
 *****************************************************
 ****************************************************/
 
@@ -40,10 +40,8 @@ long max_frqz = 2000;                   //Maximale Audio Frequenz beim variable 
 short bt_pin = 2;                       //Bluetooth Pin definieren. Fuer Leonardo 14. Fuer die Anderen 2.
 
 int a_pin1 = 6;                         //Lautsprecher Pin definieren! <<= fuer normalen Mini Pro
-//int a_pin1 = 9;                       //Lautsprecher Pin definieren! <<= fuer Leonardo
-//int a_pin1 = 5;                       //Lautsprecher Pin definieren! <<= fuer Ivkos Micro Vario
 
-// Fileter Einstellungen!!!
+// Fileter Einstellungen!!!   Hier Verengerungen nur sehr vorsichtig vornehmen!!!
 float FehlerV = 3.000 * min_steigen;    //Gewichtung fuer Vario Filter berechnen. 0.1 > FehlerV < 1.0
 
 float mittel_n = 6;                     // Anzahl Werte fuer Mittelwert bilden.
@@ -78,7 +76,7 @@ void setup() {
 
   pinMode(bt_pin, INPUT);                 // Definiert den Pin für der BT Schalter.
   PinBT = digitalRead(bt_pin);            // Definiere SChalter Zustand fuer BT.
-  //PinBT = 0;                              // Wenn keine BT-Modul eingebaut ist - 0.
+  //PinBT = 0;                              // Wenn keine BT-Modul eingebaut ist - 0. Die obere Zwei auskommentieren.
 
   pinMode(7, OUTPUT);                     // Pin zum BT Versorgung.
   pinMode(8, OUTPUT);                     // Pin zum BT Versorgung.
@@ -177,6 +175,7 @@ void loop()
 // ###############################################################################################################
 void BaroAuslesen()
 {
+  Temp = bpm.readTemperature();
   Druck = bpm.readPressure(true);
   Hoehe = bpm.getAltitude(Druck);
 }
@@ -190,7 +189,6 @@ void BaroAuslesen()
 void SteigenBerechnen()
 {
   BaroAuslesen();
-
 
   int i;
 
@@ -206,7 +204,7 @@ void SteigenBerechnen()
 
   VarioR = ((Hoehe - kal[0]) / (float(dZeit) / 1000000));
 
-  //VarioR=0.500; // Ton Test !!!!!!!!!!!!!!!!!!!!!!!!!################################
+  //VarioR=0.500; // Ton Test ! In normalen Betrieb auskommentieren!  #################
 
   //kal[1] = VarioR;
   kal[1] = 0.5* VarioR + 0.5* kal[1];  //##############################################
@@ -279,12 +277,10 @@ void AkkuVolt()
 // ###############################################################################################################
 void PiepserX()
 {
-  //Vario = 1.00; // Ton Test!
+  //Vario = 1.00; // Ton Test! In normalen Betrieb auskommentieren!
 
   float frequency = 2.94269*Vario*Vario*Vario - 71.112246*Vario*Vario + 614.136517*Vario + 30.845693;
-  //float frequency = float(max_frqz) / (1.00 + pow((Vario - 9.500) / -4.700, 4.000));
-  //float frequency = (float(max_frqz)/97.59)*Vario*Vario -17.00*Vario + 125.00;
-  //float duration = (-60.00 * Vario + 670) * 0.75; // Variable Pause
+
   float duration = -38.00*Vario + 400.00; // Variable Pause
 
   frequency = int(frequency);
@@ -333,6 +329,8 @@ void PiepserX()
 
 void Bloetooth()
 {
+
+
   // Start "Blue Fly Vario" sentence =============================================================================
   // =============================================================================================================
   /* Ausgabe im BlueFlyVario Format.     The standard BlueFlyVario outp ut mode. This sends raw
@@ -395,7 +393,7 @@ void Bloetooth()
 
     delay(leseZeitBT - 73);
 
-    // Ende "LXNAV - LXWP0" sentence ========================================================================== */
+  // Ende "LXNAV - LXWP0" sentence ========================================================================== */
 
   // =>>
 
@@ -483,7 +481,7 @@ void Bloetooth()
 
     delay(leseZeitBT - 24);
 
-    // Ende "Custom BFV sentence" ============================================================================= */
+  // Ende "Custom BFV sentence" ============================================================================= */
 
 
 
@@ -492,8 +490,8 @@ void Bloetooth()
   /*/ On-Off | Hier zwischen // ein * setzen dann ist es deaktiviert.
 
     // Zum Testen ueber Serial-Port !!!-> nicht vergessen VarioR aus zu kommentieren.
-    //Temp.[C°];Druck[Pa];Hoehe[m];dZeit[ms];VarioR[m/s];Vario[m/s];BT Taster
-    //  Zum Ausgabe aktivieren * zwischen // löschen.
+    // Temp.[C°];Druck[Pa];Hoehe[m];dZeit[ms];VarioR[m/s];Vario[m/s];BT Taster
+    // Zum Ausgabe aktivieren * zwischen // löschen.
 
     SteigenBerechnen();
 
