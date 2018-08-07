@@ -44,8 +44,8 @@ int a_pin1 = 6;                         //Lautsprecher Pin definieren! <<= fuer 
 // Fileter Einstellungen!!!   Hier Verengerungen nur sehr vorsichtig vornehmen!!!
 float FehlerV = 3.000 * min_steigen;    //Gewichtung fuer Vario Filter berechnen. 0.1 > FehlerV < 1.0
 
-float mittel_n = 6;                     // Anzahl Werte fuer Mittelwert bilden.
-float kal[7];                           // kal[n] ==> n = mittel_n +1
+float mittel_n = 7;                     // Anzahl Werte fuer Mittelwert bilden.
+float kal[8];                           // kal[n] ==> n = mittel_n +1
 
 short BatV = A3;                        //Akku Spannung Pin definieren! <<= fuer normalen Mini Pro
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ unsigned long  dZeit, ZeitE, ZeitS, ZeitPip;
 // SETUP//////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void setup() {
-  leseZeit = leseZeit - 24;
+  leseZeit = leseZeit - 34;
 
   Serial.begin(9600);
   //Serial1.begin(9600);
@@ -151,28 +151,6 @@ void loop()
     if (float(dZeit) / 1000 >= float(leseZeit) )
     {
       SteigenBerechnen();
-
-        //BT Taster;dZeit[ms];Druck[Pa];Hoehe[m];VarioR[m/s];Vario[m/s]
-        //  Zum aktivieren der Ausgabe * zwischen // loeschen.
-      
-        Serial.print(PinBT);
-        Serial.print("; ");
-      
-        Serial.print(float(dZeit) / 1000, 2);
-        Serial.print("; ");
-      
-        Serial.print(Druck);
-        Serial.print("; ");
-      
-        Serial.print(Hoehe, 2);
-        Serial.print("; ");
-      
-        Serial.print(VarioR, 2);
-        Serial.print("; ");
-      
-        Serial.print(Vario, 2);//
-        Serial.println(); // */
-
     }
     PiepserX();
   }
@@ -252,6 +230,27 @@ void SteigenBerechnen()
     kal[i] = kal[i - 1];
   }
 
+        //BT Taster;dZeit[ms];Druck[Pa];Hoehe[m];VarioR[m/s];Vario[m/s]
+        //  Zum aktivieren der Ausgabe * zwischen // loeschen.
+      
+        Serial.print(PinBT);
+        Serial.print("; ");
+      
+        Serial.print(float(dZeit) / 1000, 2);
+        Serial.print("; ");
+      
+        Serial.print(Druck);
+        Serial.print("; ");
+      
+        Serial.print(Hoehe, 2);
+        Serial.print("; ");
+      
+        Serial.print(VarioR, 2);
+        Serial.print("; ");
+      
+        Serial.print(Vario, 2);//
+        Serial.println(); // */
+
 }
 // ###############################################################################################################
 // ENDE ##########################################################################################################
@@ -263,9 +262,7 @@ void SteigenBerechnen()
 void AkkuVolt()
 {
 	Vbat = analogRead(BatV);
-	Batt = 1000.0 + 100.0*(1 - (4.16 - Vbat*(3.30/1023.00)/0.769047619)/0.85);
-  //Batt = Vbat*1.00;
-  //Batt =   Vbat*(3.3 / 1023.0)/0.769;
+	Batt = 1000.0 + 100.0*(1 - (4.16-Vbat*(3.30/1023.00)/0.76904762)/0.85);//Ist10k/(Ist3k+Ist10k)=0.76904762
 }
 // #############################################################################################################*/ 
 // ENDE ##########################################################################################################
@@ -336,8 +333,9 @@ void Bloetooth()
     pressure measurements in the form "PRS XXXXX\n": XXXXX is the raw (unfiltered) pressure
     measurement in hexadecimal pascals. */
   /*/ On-Off | Hier zwischen // ein * setzen dann ist es deaktiviert.
-  //Temp = bpm.readTemperature();
-  Druck = bpm.readPressure();
+  Temp = bpm.readTemperature();
+  //Druck = bpm.readPressure();
+  Druck = 0.250* bpm.readPressure(true) +  0.750* Druck;
 
   Serial.print("PRS ");               //Ausgabe an der BT fuer MiniPro.
   Serial.println( Druck, HEX);        //BT-Serial Schnittstelle ungefiltert.  Fuer MiniPro.
@@ -385,10 +383,10 @@ void Bloetooth()
       Serial.println(XOR,HEX);
 
       // Fuer Leonardo:
-      //Serial.print("$");
-      //Serial.print(s);
-      //Serial.print("*");
-      //Serial.println(XOR,HEX); //
+      //Serial1.print("$");
+      //Serial1.print(s);
+      //Serial1.print("*");
+      //Serial1.println(XOR,HEX); //
 
     delay(leseZeitBT - 73);
 
@@ -399,6 +397,32 @@ void Bloetooth()
   // Start "LK8EX1" sentence =====================================================================================
   // =============================================================================================================
   // Send $LK8EX1,pressure,altitude,vario,temperature,battery,*checksum
+  /*
+    LK8EX1,pressure,altitude,vario,temperature,battery,*checksum
+
+    Field 0, raw pressure in hPascal:
+      hPA*100 (example for 1013.25 becomes  101325) 
+      no padding (987.25 becomes 98725, NOT 098725)
+      If no pressure available, send 999999 (6 times 9)
+      If pressure is available, field 1 altitude will be ignored
+    
+    Field 1, altitude in meters, relative to QNH 1013.25
+      If raw pressure is available, this value will be IGNORED (you can set it to 99999
+      but not really needed)! (if you want to use this value, set raw pressure to 999999)
+    
+    Field 2, vario in cm/s
+      If vario not available, send 9999  (4 times 9) Value can also be negative
+    
+    Field 3, temperature in C , can be also negative
+      If not available, send 99
+    
+    Field 4, battery voltage or charge percentage Cannot be negative
+      If not available, send 999 (3 times 9)
+      Voltage is sent as float value like: 0.1 1.4 2.3  11.2 
+      To send percentage, add 1000. Example 0% = 1000
+      14% = 1014 .  Do not send float values for percentages.
+    Percentage should be 0 to 100, with no decimals, added by 1000!
+  */
   // On-Off | Hier zwischen // ein * setzen dann ist es deaktiviert.  
     Temp = bpm.readTemperature(true);
     Druck = 0.250* bpm.readPressure(true) +  0.750* Druck;
@@ -407,7 +431,7 @@ void Bloetooth()
     
     String s = "LK8EX1,";
     //s = String(s + String(Druck,0) + ",99999,9999," + String(Temp,1) + "," + String(Batt,0) + ",");
-    s = String(s + String(Druck,DEC) + ",99999,9999," + String(Temp,1) + "," + String(Batt,1) + ",");
+    s = String(s + String(Druck,DEC) + ",99999,9999," + String(Temp,1) + "," + String(Batt,0) + ",");
 
     // Checksum berechnen und als int ausgeben
     // wird als HEX benötigt im NMEA Datensatz
@@ -429,10 +453,10 @@ void Bloetooth()
         Serial.println(XOR,HEX);
 
         // Fuer Leonardo:
-        //Serial.print("$");
-        //Serial.print(s);
-        //Serial.print("*");
-        //Serial.println(XOR,HEX); // 
+        //Serial1.print("$");
+        //Serial1.print(s);
+        //Serial1.print("*");
+        //Serial1.println(XOR,HEX); // 
     
     delay(leseZeitBT - 30);
   // Ende "LK8EX1" sentence ================================================================================= */
@@ -473,10 +497,10 @@ void Bloetooth()
       Serial.println(XOR,HEX);
 
       // Fuer Leonardo:
-      //Serial.print("$");
-      //Serial.print(s);
-      //Serial.print("*");
-      //Serial.println(XOR,HEX); //
+      //Serial1.print("$");
+      //Serial1.print(s);
+      //Serial1.print("*");
+      //Serial1.println(XOR,HEX); //
 
     delay(leseZeitBT - 24);
 
