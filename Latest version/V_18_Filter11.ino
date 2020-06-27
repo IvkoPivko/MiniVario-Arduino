@@ -235,7 +235,7 @@ void SteigenBerechnen()
   }
 
         //BT Taster;dZeit[ms];Druck[Pa];Hoehe[m];VarioR[m/s];Vario[m/s]
-        //  Zum aktivieren der Ausgabe * zwischen // loeschen.
+        /*/  Zum aktivieren der Ausgabe * zwischen // loeschen.
       
         Serial.print(PinBT);
         Serial.print("; ");
